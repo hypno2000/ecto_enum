@@ -44,8 +44,18 @@ defmodule EctoEnum.Postgres do
           Ecto.Migration.execute sql
         end
 
+        def update_type() do
+          unquote(list)
+          |> Enum.each(&add_value/1)
+        end
+
         def drop_type() do
           sql = "DROP TYPE #{unquote type}"
+          Ecto.Migration.execute sql
+        end
+
+        defp add_value(value) do
+          sql = "ALTER TYPE #{unquote type} ADD VALUE IF NOT EXISTS '#{value}'"
           Ecto.Migration.execute sql
         end
       end
